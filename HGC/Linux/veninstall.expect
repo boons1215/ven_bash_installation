@@ -1,0 +1,41 @@
+#!/usr/bin/expect
+#
+# Copyright 2013-2020 Illumio, Inc. All Rights Reserved.
+#
+# Created by: Siew Boon Siong
+# Email: boon.siew@illumioeval.com
+# Updated: Mar-02-2020
+# Version: 1.0
+#
+# Usage softwarepush.expect <host> <ssh user> <ssh password> <su user> <su password>
+# eg. expect softwarepush.expect 172.16.3.100 illumio illumio1 root Illumio1
+# This is the script that doing the actual job in the workload
+
+source ./config
+
+set timeout 90
+
+spawn ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 [lindex $argv 1]@[lindex $argv 0]
+expect {
+    "password:" {
+        send "[lindex $argv 2]\r\n\r\n"
+    } "yes/no)?" {
+        send "yes\r"
+        set timeout -1s
+    } timeout {
+        exit
+    } -re . {
+        eof
+    } eof {
+        exit
+    }
+}
+
+expect "]$ " { send "su - [lindex $argv 3]\r" } 
+expect "Password: " { send "[lindex $argv 4]\r" } 
+expect "]# " { send "cd /tmp\r echo\r" } 
+expect "]# " { send "bash /tmp/$exarg1\r echo\r" } 
+expect "]# " { send "ls $exarg2\r" } 
+expect "]# " { send "exit\r" }
+expect "]$ " { send "exit\r" }
+expect eof
