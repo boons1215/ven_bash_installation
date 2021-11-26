@@ -13,7 +13,6 @@
 # NOTE:  The default Install Folder and Data Folder are the default variables                   #
 #                                                                                               #
 #  Written by Greg DiRubbio - Illumio Professional Services, Illumio Inc.                       #
-#  Updated by Siew Boon Siong - Illumio Professional Services, 06-Jan-2020                      #
 #                                                                                               #
 #################################################################################################
 
